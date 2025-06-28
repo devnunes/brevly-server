@@ -1,0 +1,38 @@
+### Universal ###
+# Common files that should be ignored in all projects
+
+# Logs
+*.log
+# Temporary files
+*.tmp
+*~
+
+*.bak
+# Environment files (containing secrets, API keys, credentials)
+.env
+*.env
+.env.*
+
+# Local configuration that shouldn't be shared
+*.local
+
+### Typescript ###
+# typescript specific files
+
+*.tsbuildinfo
+node_modules/
+dist/
+
+### Pnpm ###
+# pnpm package manager specific files
+
+# PNPM
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.pnpm/
+.pnpm-debug.log
+
+.pnpm-store/
+pnpm-lock.yaml.bak
+.pnpmfile.cjs
+.pnpm-cache/
