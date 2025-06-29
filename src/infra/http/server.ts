@@ -1,13 +1,16 @@
 import { fastifyCors } from '@fastify/cors'
+import { fastifySwagger } from '@fastify/swagger'
+import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import { fastify } from 'fastify'
 import {
   hasZodFastifySchemaValidationErrors,
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { env } from './env'
 
-const server = fastify({})
+const server = fastify()
 
 server.setValidatorCompiler(validatorCompiler)
 server.setSerializerCompiler(serializerCompiler)
@@ -15,24 +18,31 @@ server.setSerializerCompiler(serializerCompiler)
 server.setErrorHandler((error, _request, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
     return reply.status(400).send({
-      statusCode: 400,
-      error: 'Validation Error',
-      message: error.validation,
+      message: 'Validation Error',
     })
   }
 
   console.error(error)
   return reply.status(500).send({
-    statusCode: 500,
-    error: 'Internal Server Error',
-    message: 'An unexpected error occurred',
+    message: 'Internal server error',
   })
 })
 
-server.register(fastifyCors, {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+server.register(fastifyCors, { origin: '*' })
+
+server.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'Brevly API',
+      description: 'API for the Brevly URL shortening service',
+      version: '1.0.0',
+    },
+  },
+  transform: jsonSchemaTransform,
+})
+
+server.register(fastifySwaggerUi, {
+  routePrefix: '/docs',
 })
 
 console.log(env.DATABASE_URL)
