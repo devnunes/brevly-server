@@ -8,7 +8,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import { env } from './env'
+import { env } from '@/env'
 
 const server = fastify()
 
