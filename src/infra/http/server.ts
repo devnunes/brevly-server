@@ -9,6 +9,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { env } from '@/env'
+import { getLinkRoute } from '@/infra/http/routes/get-links'
 import { createLinkRoute } from './routes/create-link'
 
 const server = fastify()
@@ -47,6 +48,7 @@ server.register(fastifySwaggerUi, {
 })
 
 server.register(createLinkRoute)
+server.register(getLinkRoute)
 
 server.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
   console.log(`Server is running on http://localhost:${env.PORT}`)

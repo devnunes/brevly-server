@@ -13,6 +13,7 @@ const linkOutputSchema = z.object({
   id: z.uuid(),
   url: z.url().min(1).max(100),
   shortUrl: z.string().min(1).max(20),
+  accessCount: z.number(),
   createdAt: z.date(),
 })
 
@@ -35,4 +36,17 @@ export async function createLink(
   console.log('Link created:', result)
 
   return makeRight(result)
+}
+
+export async function getLinks(): Promise<
+  Either<InvalidLinkError, LinkOutput[]>
+> {
+  const results = await db.select().from(schema.links)
+  if (results.length === 0) {
+    return makeRight([])
+  }
+
+  const links = results.map(link => linkOutputSchema.parse(link))
+
+  return makeRight(links)
 }
