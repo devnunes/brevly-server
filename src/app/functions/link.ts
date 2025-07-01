@@ -6,19 +6,33 @@ import type { InvalidLinkError } from './errors/invalid-link'
 
 const linkInputSchema = z.object({
   url: z.url().min(1).max(100),
-  slug: z.string().min(1).max(20),
+  shortUrl: z.string().min(1).max(20),
+})
+
+const linkOutputSchema = z.object({
+  id: z.uuid(),
+  url: z.url().min(1).max(100),
+  shortUrl: z.string().min(1).max(20),
+  createdAt: z.date(),
 })
 
 type LinkInput = z.input<typeof linkInputSchema>
 
+type LinkOutput = z.output<typeof linkOutputSchema>
+
 export async function createLink(
   input: LinkInput
-): Promise<Either<InvalidLinkError, { url: string; slug: string }>> {
-  const { url, slug } = linkInputSchema.parse(input)
-  await db.insert(schema.links).values({
-    url,
-    shortUrl: slug,
-  })
+): Promise<Either<InvalidLinkError, LinkOutput>> {
+  const { url, shortUrl } = linkInputSchema.parse(input)
+  const [result] = await db
+    .insert(schema.links)
+    .values({
+      url,
+      shortUrl: shortUrl,
+    })
+    .returning()
 
-  return makeRight({ url, slug })
+  console.log('Link created:', result)
+
+  return makeRight(result)
 }
