@@ -31,7 +31,10 @@ server.setErrorHandler((error, _request, reply) => {
   })
 })
 
-server.register(fastifyCors, { origin: '*' })
+server.register(fastifyCors, {
+  origin: env.WEB_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'DELETE'],
+})
 
 server.register(fastifySwagger, {
   openapi: {
