@@ -16,13 +16,12 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
           shortUrl: z
             .string()
             .min(1)
-            .max(20)
             .describe('The shortUrl for the shortened link'),
         }),
         response: {
           201: z
             .object({
-              id: z.uuid(),
+              id: z.uuidv7(),
               url: z.string(),
               shortUrl: z.string(),
               createdAt: z.date(),

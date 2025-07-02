@@ -1,7 +1,9 @@
+import { eq } from 'drizzle-orm'
 import { z } from 'zod/v4'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
-import { type Either, makeRight } from '@/infra/shared/either'
+import { type Either, makeLeft, makeRight } from '@/infra/shared/either'
+import { InvalidIdError } from './errors/invalid-id'
 import type { InvalidLinkError } from './errors/invalid-link'
 
 const linkInputSchema = z.object({
@@ -10,8 +12,8 @@ const linkInputSchema = z.object({
 })
 
 const linkOutputSchema = z.object({
-  id: z.uuid(),
-  url: z.url().min(1).max(100),
+  id: z.uuidv7(),
+  url: z.url().min(1),
   shortUrl: z.string().min(1).max(20),
   accessCount: z.number(),
   createdAt: z.date(),
@@ -29,7 +31,7 @@ export async function createLink(
     .insert(schema.links)
     .values({
       url,
-      shortUrl: shortUrl,
+      shortUrl,
     })
     .returning()
 
@@ -49,4 +51,19 @@ export async function getLinks(): Promise<
   const links = results.map(link => linkOutputSchema.parse(link))
 
   return makeRight(links)
+}
+
+export async function deleteLink(id: string) {
+  const result = z.object({ id: z.uuidv7() }).parse({ id })
+
+  const response = await db
+    .delete(schema.links)
+    .where(eq(schema.links.id, result.id))
+    .returning()
+
+  if (response.length === 0) {
+    return makeLeft(new InvalidIdError())
+  }
+
+  return makeRight(response)
 }
