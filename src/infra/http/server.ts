@@ -12,6 +12,7 @@ import { env } from '@/env'
 import {
   createLinkRoute,
   deleteLinkRoute,
+  getLinkByShortUrlRoute,
   getLinkRoute,
 } from './routes/link.routes'
 
@@ -55,6 +56,7 @@ server.register(fastifySwaggerUi, {
 
 server.register(createLinkRoute)
 server.register(getLinkRoute)
+server.register(getLinkByShortUrlRoute)
 server.register(deleteLinkRoute)
 
 server.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {

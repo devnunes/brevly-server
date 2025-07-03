@@ -100,7 +100,7 @@ export const getLinkRoute: FastifyPluginAsyncZod = async server => {
 
 export const getLinkByShortUrlRoute: FastifyPluginAsyncZod = async server => {
   server.get(
-    '/links/:shortUrl',
+    '/link/:shortUrl',
     {
       schema: {
         summary: 'Get a link by shortUrl',

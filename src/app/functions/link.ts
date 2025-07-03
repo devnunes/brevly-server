@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm'
 import { z } from 'zod/v4'
+import { id } from 'zod/v4/locales'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { type Either, makeLeft, makeRight } from '@/infra/shared/either'
@@ -62,6 +63,13 @@ export async function getLinkbyShortUrl(
     .select()
     .from(schema.links)
     .where(eq(schema.links.shortUrl, shortUrlParsed))
+
+  await db
+    .update(schema.links)
+    .set({
+      accessCount: response[0].accessCount + 1,
+    })
+    .where(eq(schema.links.id, response[0].id))
 
   return makeRight(linkOutputSchema.parse(response[0]))
 }
