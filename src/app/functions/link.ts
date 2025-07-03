@@ -8,13 +8,13 @@ import type { InvalidLinkError } from './errors/invalid-link'
 
 const linkInputSchema = z.object({
   url: z.url().min(1).max(100),
-  shortUrl: z.string().min(1).max(20),
+  shortUrl: z.string().min(1),
 })
 
 const linkOutputSchema = z.object({
   id: z.uuidv7(),
   url: z.url().min(1),
-  shortUrl: z.string().min(1).max(20),
+  shortUrl: z.string().min(1),
   accessCount: z.number(),
   createdAt: z.date(),
 })
@@ -53,12 +53,25 @@ export async function getLinks(): Promise<
   return makeRight(links)
 }
 
+export async function getLinkbyShortUrl(
+  shortUrl: string
+): Promise<Either<InvalidLinkError, LinkOutput>> {
+  const shortUrlParsed = z.string().min(1).parse(shortUrl)
+
+  const response = await db
+    .select()
+    .from(schema.links)
+    .where(eq(schema.links.shortUrl, shortUrlParsed))
+
+  return makeRight(linkOutputSchema.parse(response[0]))
+}
+
 export async function deleteLink(id: string) {
-  const result = z.object({ id: z.uuidv7() }).parse({ id })
+  const idParsed = z.uuidv7().parse(id)
 
   const response = await db
     .delete(schema.links)
-    .where(eq(schema.links.id, result.id))
+    .where(eq(schema.links.id, idParsed))
     .returning()
 
   if (response.length === 0) {

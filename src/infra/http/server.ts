@@ -9,9 +9,11 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { env } from '@/env'
-import { getLinkRoute } from '@/infra/http/routes/get-links'
-import { createLinkRoute } from './routes/create-link'
-import { deleteLinkRoute } from './routes/delete-link'
+import {
+  createLinkRoute,
+  deleteLinkRoute,
+  getLinkRoute,
+} from './routes/link.routes'
 
 const server = fastify()
 
