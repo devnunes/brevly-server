@@ -14,9 +14,6 @@
 !.env.example
 !.env.test
 
-# Local configuration that shouldn't be shared
-*.local
-
 ### Typescript ###
 # typescript specific files
 
