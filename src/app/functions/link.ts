@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import { z } from 'zod/v4'
 import { id } from 'zod/v4/locales'
 import { db } from '@/infra/db'
@@ -44,7 +44,10 @@ export async function createLink(
 export async function getLinks(): Promise<
   Either<InvalidLinkError, LinkOutput[]>
 > {
-  const results = await db.select().from(schema.links)
+  const results = await db
+    .select()
+    .from(schema.links)
+    .orderBy(desc(schema.links.createdAt))
   if (results.length === 0) {
     return makeRight([])
   }
