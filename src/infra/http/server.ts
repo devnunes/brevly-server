@@ -12,6 +12,7 @@ import { env } from '@/env'
 import {
   createLinkRoute,
   deleteLinkRoute,
+  exportLinksRoute,
   getLinkByShortUrlRoute,
   getLinkRoute,
 } from './routes/link.routes'
@@ -58,6 +59,7 @@ server.register(createLinkRoute)
 server.register(getLinkRoute)
 server.register(getLinkByShortUrlRoute)
 server.register(deleteLinkRoute)
+server.register(exportLinksRoute)
 
 server.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
   console.log(`Server is running on http://localhost:${env.PORT}`)

@@ -3,6 +3,7 @@ import { z } from 'zod/v4'
 import {
   createLink,
   deleteLink,
+  exportLinks,
   getLinkbyShortUrl,
   getLinks,
 } from '@/app/functions/link'
@@ -173,6 +174,31 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
         })
       }
       return reply.status(204).send()
+    }
+  )
+}
+
+export const exportLinksRoute: FastifyPluginAsyncZod = async server => {
+  server.post(
+    '/links/export',
+    {
+      schema: {
+        summary: 'Export all links',
+        description: 'Exports all shortened links as a CSV file.',
+        tags: ['Export'],
+        response: {
+          200: z.object({
+            reportUrl: z.string(),
+          }),
+        },
+      },
+    },
+    async (_request, reply) => {
+      const result = await exportLinks()
+
+      const { reportUrl } = unwrapEither(result)
+
+      return reply.status(200).send({ reportUrl })
     }
   )
 }
