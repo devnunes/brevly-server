@@ -1,62 +1,55 @@
 # Brevly Server
 
-A Fastify-based API for the Brevly URL shortening service, using PostgreSQL and Drizzle ORM.
+## About
+
+This project is a challenge for my post-graduation course and will be part of my final grade. It is a URL shortening service built with Node.js, TypeScript, Fastify, and Drizzle ORM, following best practices for backend development.
 
 ## Features
 
-- Create, delete, and list shortened links
-- Retrieve original URL from a short URL
-- Increment access count for links
-- Export links as CSV (with CDN support planned)
-- OpenAPI (Swagger) documentation at `/docs`
+- Shorten long URLs to custom short URLs
+- Retrieve all shortened links
+- Get link details by short URL
+- Delete links
+- Export all links as a CSV report
 
-## Getting Started
+## Tech Stack
 
-### Prerequisites
+- Node.js & TypeScript
+- Fastify (API framework)
+- Drizzle ORM (database)
+- PostgreSQL (database)
+- Zod (validation)
+- Cloudflare R2 (object storage)
 
-- Node.js (v18+ recommended)
-- PostgreSQL
+## Running Locally
 
-### Setup
+1. Clone the repository
+2. Install dependencies with `pnpm install`
+3. Configure environment variables in `.env` (see `src/env.ts` for required variables)
+4. Start the server: `pnpm dev` or `pnpm start`
 
-1. Clone the repository.
-2. Copy `.env.example` to `.env` and fill in your environment variables.
-3. Install dependencies:
+## API Endpoints
 
-   ```bash
-   pnpm install
-   ```
+- `POST /links` — Create a new shortened link
+- `GET /links` — List all links
+- `GET /link/:shortUrl` — Get link by short URL
+- `DELETE /link` — Delete a link (by ID)
+- `POST /links/export` — Export all links as CSV
 
-4. Run database migrations:
+API documentation is available at `/docs` when the server is running.
 
-   ```bash
-   pnpm db:migrate
-   ```
+## Testing
 
-5. Start the server:
+Run tests with `pnpm test`.
 
-   ```bash
-   pnpm dev
-   ```
+## Notes
 
-The server will run at `http://localhost:3333` by default.
-
-### Testing
-
-```bash
-pnpm test
-```
-
-## API Documentation
-
-Visit [http://localhost:3333/docs](http://localhost:3333/docs) for Swagger UI.
-
-## Project Structure
-
-- `src/infra/http/` - HTTP server and routes
-- `src/infra/db/` - Database schemas and migrations
+This project was developed as part of an academic challenge and can be expanded to include authentication, analytics, and other features.
 
 ## License
 
-ISC
+This project is for educational purposes only.
 
+---
+
+Developed by Matheus Nunes — Post-graduation in Web Development
